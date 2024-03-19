@@ -3,6 +3,8 @@ import { Repl } from '@vue/repl';
 import CodeMirror from '@vue/repl/codemirror-editor';
 import { watchEffect } from 'vue';
 import { FXUIStore } from './store';
+import Header from './Header.vue';
+
 
 const setVH = () => {
   document.documentElement.style.setProperty('--vh', window.innerHeight + `px`);
@@ -33,6 +35,7 @@ watchEffect(() => {
 </script>
 
 <template>
+  <Header :store="store" />
   <Repl
     :editor="CodeMirror"
     :store="store"
