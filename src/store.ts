@@ -38,7 +38,21 @@ const installCode = computed(
   () => `import FXUI from 'fx-ui-vue'
 import { getCurrentInstance } from 'vue'
 
+const appendStyle = () => {
+  return new Promise((resolve, reject) => {
+    const style = document.createElement('style')
+    style.innerHTML = '* { margin: 0; padding: 0; }'
+    document.body.appendChild(style)
 
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = '${style.value}'
+    link.onload = resolve
+    link.onerror = reject
+    document.body.appendChild(link)
+  })
+}
+await appendStyle()
 
 export const installNutUI = () => {
   const { parent } = window
@@ -48,19 +62,32 @@ export const installNutUI = () => {
 `
 );
 
+const utoa = (data: string) => {
+  return btoa(unescape(encodeURIComponent(data)));
+};
 
+const atou = (b64: string) => {
+  return decodeURIComponent(escape(atob(b64)));
+};
 
 // 不允许修改的文件，不通过 URL 传递
+const filterFiles = [IMPORTMAP_FILE, CONTAINER_FILE, INSTALL_FILE];
 
 
-
+/**
+ * @vue/repl的生命周期抽象成了一个class ReplStore，
+ * ReplStore 只预置了Vue的运行环境，假设我想预置更多的模块，比如支持lodash，组件库等等。
+ * 所以这里需要改造一下，继承ReplStore做一些改造。
+ * **/
 export class FXUIStore extends ReplStore {
   constructor(storeOptions?: StoreOptions, hash?: string) {
     super(storeOptions);
     if (hash) {
       const saved = JSON.parse(atou(hash));
       for (const filename in saved) {
-        
+        const newName = filename.startsWith('src/') ? filename : `src/${filename}`;
+        if (!filterFiles.includes(newName)) {
+          this.addFile(new File(newName, saved[filename]));
         }
       }
     } else {
@@ -68,18 +95,25 @@ export class FXUIStore extends ReplStore {
       this.addFile(main);
     }
 
+    const container = new File(CONTAINER_FILE, containerCode, false); // 入口组件，隐藏
+    this.addFile(container);
+
+    const install = new File(INSTALL_FILE, installCode.value, false); // install UI组件，隐藏
+    this.addFile(install);
+
     this.state.mainFile = CONTAINER_FILE; // 设置入口组件名
     this.setActive(APP_FILE); // 设置当前tab组件
   }
   serialize() {
-  const files = this.getFiles();
-   // delete files[IMPORTMAP_FILE];
+    const files = this.getFiles();
+    // delete files[IMPORTMAP_FILE];
     // delete files[TSCONFIG_FILE];
     // delete files[CONTAINER_FILE.replace('src/', '')];
     // delete files[INSTALL_FILE.replace('src/', '')];
     return '#' + utoa(JSON.stringify(files));
   }
 
+  // 切换组件库版本
   setFXUIVersion(v: string) {
     style.value = `https://cdn.jsdelivr.net/npm/fx-ui-vue@0${v}/style.css`
     const install = new File(INSTALL_FILE, installCode.value, true);
