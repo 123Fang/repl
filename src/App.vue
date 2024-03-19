@@ -2,14 +2,40 @@
 import { Repl } from '@vue/repl';
 import CodeMirror from '@vue/repl/codemirror-editor';
 import { watchEffect } from 'vue';
+import { FXUIStore } from './store';
 
-const testData ={}
+const setVH = () => {
+  document.documentElement.style.setProperty('--vh', window.innerHeight + `px`);
+};
+window.addEventListener('resize', setVH);
+setVH();
+
+const hash = location.hash.slice(1);
+
+const store = new FXUIStore(
+  {
+    // defaultVueRuntimeURL: 'https://cdn.jsdelivr.net/npm/@vue/runtime-dom/dist/runtime-dom.esm-browser.js'
+  },
+  hash
+);
+
+store.setImportMap({
+  imports: {
+    'fx-ui-vue': 'https://cdn.jsdelivr.net/npm/fx-ui-vue@0.6.4/dist/fx-ui-vue.js'
+  }
+});
+
+// persist state
+watchEffect(() => {
+  const newHash = store.serialize();
+  history.replaceState({}, '', newHash);
+});
 </script>
 
 <template>
-    <Repl
+  <Repl
     :editor="CodeMirror"
-    :store="testData"
+    :store="store"
     :show-import-map="false"
     :show-ts-config="false"
     @keydown.ctrl.s.prevent
@@ -18,4 +44,30 @@ const testData ={}
 </template>
 
 <style>
+.dark {
+  color-scheme: dark;
+}
+
+body {
+  font-size: 13px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+    'Helvetica Neue', sans-serif;
+  margin: 0;
+  --base: #444;
+  --nav-height: 50px;
+}
+
+.vue-repl {
+  --color-branding: #ff2f2b !important;
+  --color-branding-dark: #ff2f2b !important;
+  height: calc(var(--vh) - var(--nav-height)) !important;
+}
+
+button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  margin: 0;
+  background-color: transparent;
+}
 </style>
