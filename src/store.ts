@@ -72,7 +72,11 @@ export class FXUIStore extends ReplStore {
     this.setActive(APP_FILE); // 设置当前tab组件
   }
   serialize() {
-    const files = this.getFiles();
+  const files = this.getFiles();
+   // delete files[IMPORTMAP_FILE];
+    // delete files[TSCONFIG_FILE];
+    // delete files[CONTAINER_FILE.replace('src/', '')];
+    // delete files[INSTALL_FILE.replace('src/', '')];
     return '#' + utoa(JSON.stringify(files));
   }
 
@@ -84,7 +88,10 @@ export class FXUIStore extends ReplStore {
     this.setImportMap({
       imports: {
         'fx-ui-vue': `https://cdn.jsdelivr.net/npm/fx-ui-vue@${v}/dist/fx-ui-vue.js`,
-   
+        // 'dist/packages/toast/style': './style.js',
+        // 'dist/packages/dialog/style': './style.js',
+        // 'dist/packages/imagepreview/style': './style.js',
+        // 'dist/packages/notify/style': './style.js'
       }
     });
   }
