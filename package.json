@@ -1,0 +1,29 @@
+{
+  "name": "@123fangf/repl",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Vue Playground",
+  "keywords": [
+    "repl",
+    "vue3"
+  ],
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.24",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "rimraf": "^5.0.5",
+    "vite": "^5.1.6",
+    "vue": "^3.4.21"
+  },
+  "dependencies": {
+    "@vue/repl": "^3.4.0",
+    "file-saver": "^2.0.5",
+    "jszip": "^3.10.1"
+  }
+}
