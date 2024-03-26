@@ -16,14 +16,16 @@ const hash = location.hash.slice(1);
 
 const store = new FXUIStore(
   {
-    // defaultVueRuntimeURL: 'https://cdn.jsdelivr.net/npm/@vue/runtime-dom/dist/runtime-dom.esm-browser.js'
+    defaultVueRuntimeURL: 'https://cdn.jsdelivr.net/npm/@vue/runtime-dom/dist/runtime-dom.esm-browser.js'
   },
   hash
 );
 
 store.setImportMap({
   imports: {
-    'fx-ui-vue': 'https://cdn.jsdelivr.net/npm/fx-ui-vue@0.6.4/dist/fx-ui-vue.js'
+    'fx-ui-vue': 'https://cdn.jsdelivr.net/npm/fx-ui-vue@0.6.4/dist/fx-ui-vue.js',
+    "@drag-drop/core": "http://127.0.0.1:5500/dist2/assets/core.js",
+    "@drag-drop/plugin-auxiliary-line": "http://127.0.0.1:5500/dist2/assets/plugin.js"
   }
 });
 
@@ -61,8 +63,8 @@ body {
 }
 
 .vue-repl {
-  --color-branding: #ff2f2b !important;
-  --color-branding-dark: #ff2f2b !important;
+  --color-branding: #f53535 !important;
+  --color-branding-dark: #f53535 !important;
   height: calc(var(--vh) - var(--nav-height)) !important;
 }
 

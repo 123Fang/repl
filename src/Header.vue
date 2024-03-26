@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import Sun from './icons/Sun.vue';
 import Moon from './icons/Moon.vue';
 import Share from './icons/Share.vue';
@@ -13,7 +13,7 @@ const fxuiVersion = ref(`latest`);
 
 async function setFXUIVersion(v: string) {
   fxuiVersion.value = `loading...`;
-  props.store.setNutUIVersion(v);
+  props.store.setFXUIVersion(v);
   fxuiVersion.value = `v${v}`;
 }
 
@@ -27,6 +27,7 @@ function toggleDark() {
   cls.toggle('dark');
   localStorage.setItem('vue-sfc-playground-prefer-dark', String(cls.contains('dark')));
 }
+onMounted(toggleDark)
 </script>
 
 <template>

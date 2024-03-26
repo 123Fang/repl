@@ -105,11 +105,13 @@ export class FXUIStore extends ReplStore {
     this.setActive(APP_FILE); // 设置当前tab组件
   }
   serialize() {
+    // 为了更简洁，这里隐藏了如下四个文件 
+    // 1 IMPORTMAP_FILE  2 TSCONFIG_FILE  3 CONTAINER_FILE  4 INSTALL_FILE
     const files = this.getFiles();
-    // delete files[IMPORTMAP_FILE];
-    // delete files[TSCONFIG_FILE];
-    // delete files[CONTAINER_FILE.replace('src/', '')];
-    // delete files[INSTALL_FILE.replace('src/', '')];
+    delete files[IMPORTMAP_FILE];
+    delete files[TSCONFIG_FILE];
+    delete files[CONTAINER_FILE.replace('src/', '')];
+    delete files[INSTALL_FILE.replace('src/', '')];
     return '#' + utoa(JSON.stringify(files));
   }
 
