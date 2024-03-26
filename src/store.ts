@@ -18,16 +18,16 @@ const value1 = ref('')
 
 const CONTAINER_FILE = 'src/Container.vue';
 const APP_FILE = 'src/App.vue';
-const INSTALL_FILE = 'src/install-nutui.js';
+const INSTALL_FILE = 'src/install.js';
 const IMPORTMAP_FILE = 'import-map.json';
 const TSCONFIG_FILE = 'tsconfig.json';
 
 const containerCode = `\
 <script setup>
 import App from './App.vue'
-import {installNutUI} from './install-nutui.js'
+import {installUI} from './install.js'
 
-installNutUI()
+installUI()
 </script>
 
 <template>
@@ -54,7 +54,7 @@ const appendStyle = () => {
 }
 await appendStyle()
 
-export const installNutUI = () => {
+export const installUI = () => {
   const { parent } = window
   const instance = getCurrentInstance()
   instance.appContext.app.use(FXUI)
@@ -95,18 +95,16 @@ export class FXUIStore extends ReplStore {
       this.addFile(main);
     }
 
-    const container = new File(CONTAINER_FILE, containerCode, false); // 入口组件，隐藏
+    const container = new File(CONTAINER_FILE, containerCode, true); // 入口组件，隐藏
     this.addFile(container);
 
-    const install = new File(INSTALL_FILE, installCode.value, false); // install UI组件，隐藏
+    const install = new File(INSTALL_FILE, installCode.value, true); // install UI组件，隐藏
     this.addFile(install);
 
     this.state.mainFile = CONTAINER_FILE; // 设置入口组件名
     this.setActive(APP_FILE); // 设置当前tab组件
   }
   serialize() {
-    // 为了更简洁，这里隐藏了如下四个文件 
-    // 1 IMPORTMAP_FILE  2 TSCONFIG_FILE  3 CONTAINER_FILE  4 INSTALL_FILE
     const files = this.getFiles();
     delete files[IMPORTMAP_FILE];
     delete files[TSCONFIG_FILE];

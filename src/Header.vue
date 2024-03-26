@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import Sun from './icons/Sun.vue';
 import Moon from './icons/Moon.vue';
 import Share from './icons/Share.vue';
@@ -27,7 +27,6 @@ function toggleDark() {
   cls.toggle('dark');
   localStorage.setItem('vue-sfc-playground-prefer-dark', String(cls.contains('dark')));
 }
-onMounted(toggleDark)
 </script>
 
 <template>
